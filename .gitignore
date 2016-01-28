@@ -1,2 +1,4 @@
 mylinklist1.o
 mylinklist1
+.gitignore~
+*~
