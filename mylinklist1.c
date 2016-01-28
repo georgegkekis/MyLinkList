@@ -10,7 +10,7 @@ struct mylist
 
 typedef struct mylist mylist;
 
-mylist *create_list(int var, int *pa, int **pb);
+mylist *create_list(void);
 mylist *add_element(int element);
 mylist *search_for_element(int element, mylist **pprevious);
 void delete_from_list(int element);
@@ -35,14 +35,8 @@ int main()
 	while ((c = getchar())) {
 		switch (c) {
 			case 'c':
-				printf("type in element\n");
-				scanf("%d",&element);
-			{
-				int a;
-				int *b;
-				head = create_list(element,&a,&b);
-				printf("%d %p",a,b);
-			}
+				head = create_list();
+				printf("list created\n");
 				break;
 			case 'a':
 				printf ("type in element to add\n");
@@ -78,12 +72,9 @@ int main()
 	return (0);
 }
 
-mylist *create_list(int var,int *pa,int **pb)
+mylist *create_list(void)
 {
-	*pb = 56;
-	*pa = 57;
 	mylist *ptr = (mylist*)malloc(sizeof(mylist));
-	ptr->var = var;
 	last=ptr;
 	return ptr;
 }
