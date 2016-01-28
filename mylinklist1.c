@@ -12,8 +12,8 @@ typedef struct mylist mylist;
 
 mylist *create_list(void);
 mylist *add_element(mylist **head , mylist **last , int element);
-mylist *search_for_element(int element, mylist **pprevious , mylist **head);
-void delete_from_list(int element , mylist **head);
+mylist *search_for_element(mylist **head , int element, mylist **pprevious);
+void delete_from_list(mylist **head , int element);
 void print_list(mylist** head);
 //mylist *head = NULL;
 //mylist *last = NULL;
@@ -51,7 +51,7 @@ int main()
 				scanf ("%d",&element);
 				{
 				mylist *previous;
-				found = search_for_element(element,&previous , &head);
+				found = search_for_element(&head , element,&previous);
 				}
 				if (found)
 				printf("found: %d\n",found->var);
@@ -61,7 +61,7 @@ int main()
 			case 'd':
 				printf ("type in element to delete\n");
 				scanf ("%d",&element);
-				delete_from_list(element , &head);
+				delete_from_list(&head , element);
 				break;
 			case 'p':
 				print_list(&head);
@@ -69,10 +69,7 @@ int main()
 			case 'e':return 0;
 		}
 	}
-	printf("head: %d\n",head->var);
-	printf("middle: %d\n",head->next_ptr->var);
-	printf("last: %d\n",last->var);
-	return (0);
+	return 0;
 }
 
 mylist *create_list(void)
@@ -93,7 +90,7 @@ mylist *add_element(mylist **head , mylist **last , int element)
 	return NULL;
 }
 
-mylist *search_for_element(int element, mylist **pprevious , mylist** head)
+mylist *search_for_element(mylist** head , int element, mylist **pprevious)
 {
 	mylist *ptr;
 	*pprevious = NULL;
@@ -107,17 +104,18 @@ mylist *search_for_element(int element, mylist **pprevious , mylist** head)
 	return NULL;
 }
 
-void delete_from_list(int element , mylist **phead)
+void delete_from_list(mylist **phead , int element)
 {
 	mylist *previous;
 	mylist *ptr = *phead;
-	ptr = search_for_element(element,&previous , phead);
+	ptr = search_for_element(phead , element,&previous);
 		if (ptr) {
 			previous->next_ptr = ptr->next_ptr;
 		}
 		else
 		printf("could not find element");
 }
+
 void print_list(mylist** head)
 {
 	int i =0;
@@ -128,3 +126,18 @@ void print_list(mylist** head)
 		ptr = ptr->next_ptr;
 	}
 }
+
+/*delete_from_list_pointer(mylist **head , mylist **ptr , **ptodelete)
+{
+	
+	mylist *ptr;
+	*pprevious = NULL;
+	ptr = *head;
+	while(ptr) {
+		if(ptr->nex == element)
+		return ptr;
+		*pprevious = ptr;
+		ptr=ptr->next_ptr;
+	}
+	return NULL;
+}*/
