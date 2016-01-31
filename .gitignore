@@ -2,3 +2,4 @@ mylinklist1.o
 mylinklist1
 .gitignore~
 *~
+.anjuta_sym_db.db
