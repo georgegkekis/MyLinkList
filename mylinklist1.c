@@ -11,48 +11,45 @@ struct mylist
 typedef struct mylist mylist;
 
 mylist *create_list(void);
-mylist *add_element(mylist **head , mylist **last , int element);
+int add_element(mylist **head , int element);
 mylist *search_for_element(mylist **head , int element, mylist **pprevious);
 void delete_from_list(mylist **head , int element);
-void print_list(mylist** head);
+int print_list(mylist **head);
 //mylist *head = NULL;
 //mylist *last = NULL;
 //mylist *previous = NULL;
+int added = 0;
 
 int main()
 {
-	mylist *last = NULL;
 	mylist *head = NULL;
 	mylist *found;
+	mylist *previous;
 	int element;
 	int c;
-	printf("hi,This program does basic linklist manupulation\n");
+	printf("hi,This program does basic linklist manupulation.\n");
 	printf("what would you like to do?\n");
-	printf("Press:\nc for creating a list ");
-	printf("\na for appending an element to the list");
-	printf("\ns for searching for an element");
-	printf("\nd for deleting an element");
-	printf("\np for printing the list");
-	printf("\ne for exiting program\n");
+	printf("Press:\nc for creating a list.");
+	printf("\na for appending an element to the list.");
+	printf("\ns for searching for an element.");
+	printf("\nd for deleting an element.");
+	printf("\np for printing the list.");
+	printf("\ne for exiting program.\n");
 	while ((c = getchar())) {
 		switch (c) {
 			case 'c':
 				head = create_list();
-				last = head;
 				printf("list created\n");
 				break;
 			case 'a':
 				printf ("type in element to add\n");
 				scanf ("%d",&element);
-				last = add_element(&head , &last , element);
+				added = add_element(&head , element);
 				break;
 			case 's':
 				printf ("type in element to search for\n");
 				scanf ("%d",&element);
-				{
-				mylist *previous;
-				found = search_for_element(&head , element,&previous);
-				}
+				found = search_for_element(&head , element , &previous);
 				if (found)
 				printf("found: %d\n",found->var);
 				else
@@ -66,7 +63,8 @@ int main()
 			case 'p':
 				print_list(&head);
 				break;
-			case 'e':return 0;
+			case 'e':
+				return 0;
 		}
 	}
 	return 0;
@@ -74,20 +72,25 @@ int main()
 
 mylist *create_list(void)
 {
-	mylist *ptr = (mylist*)malloc(sizeof(mylist));
+	mylist *ptr = (mylist*)malloc(sizeof(mylist*));
 	return ptr;
 }
 
-mylist *add_element(mylist **head , mylist **last , int element)
+int add_element(mylist **head , int element)
 {
-	mylist *ptr =(mylist*)malloc(sizeof(mylist));
-	if (*last) {
-		ptr->var= element;
-		(*last)->next_ptr = ptr;
-		return ptr;
+	mylist *ptr,*ptrtemp;
+	ptr = *head;
+	while (ptr) {
+		if (ptr->next_ptr == NULL) {
+			ptrtemp = (mylist*)malloc(sizeof(mylist));
+			ptr->next_ptr = ptrtemp;
+			ptr->var = element;
+			return 1;
+		}
+		ptr = ptr->next_ptr;
 	}
-	printf("error there is no list list\nPlease use c to create a new list first");
-	return NULL;
+	
+	return 0;
 }
 
 mylist *search_for_element(mylist** head , int element, mylist **pprevious)
@@ -104,27 +107,46 @@ mylist *search_for_element(mylist** head , int element, mylist **pprevious)
 	return NULL;
 }
 
-void delete_from_list(mylist **phead , int element)
+void delete_from_list(mylist **head , int element)
 {
 	mylist *previous;
-	mylist *ptr = *phead;
-	ptr = search_for_element(phead , element,&previous);
+	mylist *ptr;
+	ptr = search_for_element(head , element, &previous);
 		if (ptr) {
-			previous->next_ptr = ptr->next_ptr;
+			if (previous) 
+				previous->next_ptr = ptr->next_ptr;
+			else {
+				if(ptr->next_ptr == NULL) {
+					*head = NULL;
+					printf("list destroyed\n");
+				}
+				*head = ptr;
+			}
 		}
 		else
 		printf("could not find element");
 }
 
-void print_list(mylist** head)
+int print_list(mylist** head)
 {
 	int i =0;
 	mylist *ptr = *head;
+	
+	if (added == 0) {
+		printf("add sth to the list first\n");
+		return 0;
+	}
+	if (head == NULL) {
+		printf("list hasnt been created yet\n");
+	return 0;
+	}
 	while (ptr) {
 		printf("%d variable is:%d\n",i,ptr->var);
+		printf("%p\n",ptr->next_ptr);
 		i++;
 		ptr = ptr->next_ptr;
 	}
+	return 0;
 }
 
 /*delete_from_list_pointer(mylist **head , mylist **ptr , **ptodelete)
